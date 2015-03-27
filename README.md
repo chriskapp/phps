@@ -10,15 +10,13 @@ return types and type-hints based on doc annotations. Then the tool can be used
 to query the index. It should help to provide more insight of an code base. This 
 can be used i.e. by IDEs to provide more intelligent code completion.
 
-## How it works
-
 PHPS uses the great nikic/php-parser to parse all definitions. While scanning it
 uses an in-memory sqlite database to store all definitions. If the scan process 
 was completed all definitions gets written chunk wise into an actual sqlite 
-file. Because of this the indexing should be fast even if you have a huge code 
-base.
+file. Because of this the indexing process should be fast even if you have a 
+huge code base.
 
-## Howto use
+## Usage
 
 To create an index goto the directory which you want index and type
 
@@ -26,7 +24,8 @@ To create an index goto the directory which you want index and type
 
 PHPS will now recursively traverse all folders and parse every .php file. A new
 file phps.db will be created in the current working dir which contains the 
-sqlite database with all definitions.
+sqlite database with all definitions. You can use the -v switch to see which
+files are scanned.
 
 You can now use the index. I.e. to get all available classes in the 
 Symfony\Component\Console\Command namesspace you can use the command:
