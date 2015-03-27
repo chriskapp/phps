@@ -1,0 +1,26 @@
+{
+  "name": "phps/phps",
+  "description": "PHPS is a tool that generates an index of classes found in PHP source files",
+  "homepage": "https://github.com/k42b3/phps",
+  "authors": [
+    {
+      "name": "Christoph Kappestein",
+      "email": "k42b3.x@gmail.com",
+      "homepage": "http://k42b3.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.3",
+    "nikic/php-parser": "1.2.1",
+    "doctrine/dbal": "~2.5",
+    "symfony/console": "2.6.5",
+    "monolog/monolog": "1.13.1",
+    "pimple/pimple": "~3.0"
+  },
+  "bin": ["bin/phps"],
+  "autoload": {
+    "psr-0": {
+      "Phps": "src/"
+    }
+  }
+}
