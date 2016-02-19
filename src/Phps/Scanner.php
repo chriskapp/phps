@@ -36,19 +36,33 @@ use RecursiveIteratorIterator;
 class Scanner
 {
     /**
-     * @var Doctrine\DBAL\Connection
+     * @var \Doctrine\DBAL\Connection
      */
     protected $connection;
     
     /**
-     * @var Psr\Log\LoggerInterface
+     * @var \Psr\Log\LoggerInterface
      */
     protected $logger;
 
+    /**
+     * @var \PhpParser\Parser
+     */
     protected $parser;
+
+    /**
+     * @var \PhpParser\NodeTraverser
+     */
     protected $traverser;
 
+    /**
+     * @var \Phps\Scanner\ResolveVisitor
+     */
     protected $resolve;
+
+    /**
+     * @var \Phps\Scanner\AnalyzeVisitor
+     */
     protected $analyze;
 
     public function __construct(Connection $connection, LoggerInterface $logger)
