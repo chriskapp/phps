@@ -1,11 +1,11 @@
 <?php
 
 $stub = <<<TEXT
-#!/usr/bin/env php
 <?php
 /*
  * PHPS is a tool that generates an index of classes found in PHP source files
- * Copyright (C) 2015 Christoph Kappestein <k42b3.x@gmail.com>
+ *
+ * Copyright (C) 2015-2016 Christoph Kappestein <k42b3.x@gmail.com>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
