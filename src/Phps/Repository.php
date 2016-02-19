@@ -39,32 +39,47 @@ class Repository
         $this->connection = $connection;
     }
 
-    public function getClasses($name)
-    {
-        $name = ltrim($name, '\\');
-
-        $sql = 'SELECT name,
-				       file
-				  FROM phps_class
-				 WHERE name LIKE :name';
-
-        return $this->connection->fetchAll($sql, array(
-            'name' => '%' . $name . '%'
-        ));
-    }
-
     public function getDescription($className, $query)
     {
         $class = $this->getClassByName($className);
 
         if (!empty($class)) {
             return array(
+                'class'      => $class['name'],
+                'extends'    => !empty($class['extend']) ? $class['extend'] : null,
+                'implements' => $this->getImplements($class),
                 'properties' => $this->getProperties($class, $query),
                 'methods'    => $this->getMethods($class, $query),
             );
         } else {
             throw new \RuntimeException('Class name not found');
         }
+    }
+
+    public function getClasses($query)
+    {
+        $query = ltrim($query, '\\');
+
+        $sql = 'SELECT name,
+				       file
+				  FROM phps_class
+				 WHERE name LIKE :query';
+
+        return $this->connection->fetchAll($sql, array(
+            'query' => '%' . $query . '%'
+        ));
+    }
+
+    public function getClassesByOffset($offset)
+    {
+        $sql = 'SELECT id,
+                       name,
+                       extend,
+                       file
+                  FROM phps_class
+                 LIMIT ' . $offset . ', 100';
+
+        return $this->connection->fetchAll($sql);
     }
 
     public function getClassByName($className)
@@ -81,7 +96,35 @@ class Repository
         ));
     }
 
-    protected function getProperties(array $class, $query)
+    public function getClassCount()
+    {
+        $sql = 'SELECT COUNT(id)
+                  FROM phps_class';
+
+        return $this->connection->fetchColumn($sql);
+    }
+
+    public function getImplements(array $class)
+    {
+        $sql = 'SELECT name
+                  FROM phps_implement
+                 WHERE class_id = :class_id';
+
+        $params = array(
+            'class_id' => $class['id']
+        );
+
+        $result     = $this->connection->fetchAll($sql, $params);
+        $implements = [];
+
+        foreach ($result as $row) {
+            $implements[] = $row['name'];
+        }
+
+        return $implements;
+    }
+
+    public function getProperties(array $class, $query = null)
     {
         $sql = 'SELECT modifier,
 				       name,
@@ -102,7 +145,7 @@ class Repository
         return $this->connection->fetchAll($sql, $params);
     }
 
-    protected function getMethods(array $class, $query)
+    public function getMethods(array $class, $query = null)
     {
         $sql = 'SELECT id,
 				       modifier,
@@ -129,7 +172,7 @@ class Repository
         return $methods;
     }
 
-    protected function getParametersByMethod($methodId)
+    public function getParametersByMethod($methodId)
     {
         $sql = 'SELECT position,
 				       type_hint,

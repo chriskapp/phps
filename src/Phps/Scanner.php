@@ -340,7 +340,7 @@ class Scanner
                     if ($basicType !== null) {
                         $result[] = $basicType;
                     } else {
-                        // in this case type is an class name. We check whether
+                        // in this case type is a class name. We check whether
                         // we can resolve the name by looking at the uses
                         $parts     = explode('\\', $type);
                         $aliasName = $parts[0];

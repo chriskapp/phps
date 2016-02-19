@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<files>
+    <file class="Foo\Foo\Bar"><![CDATA[
+{
+    "class": "Foo\\Foo\\Bar",
+    "extends": "Foo\\Foo\\Foo",
+    "implements": [
+        "Foo\\Foo\\Bar",
+        "Bar\\Foo",
+        "Foo\\Foo\\Bar\\Foo"
+    ],
+    "properties": [],
+    "methods": [
+        {
+            "id": "aa6becede3963bd1e5145d5303719c1f68705ff6",
+            "modifier": "1",
+            "name": "test1",
+            "return_type": "int",
+            "parameters": [
+                {
+                    "position": "0",
+                    "type_hint": null,
+                    "name": "arg1",
+                    "by_ref": "0",
+                    "default_value": null
+                },
+                {
+                    "position": "1",
+                    "type_hint": "array",
+                    "name": "arg2",
+                    "by_ref": "0",
+                    "default_value": null
+                },
+                {
+                    "position": "2",
+                    "type_hint": null,
+                    "name": "arg3",
+                    "by_ref": "0",
+                    "default_value": "foo"
+                }
+            ]
+        },
+        {
+            "id": "f314827b4168309d296aa96e479ccea954df80bd",
+            "modifier": "2",
+            "name": "test2",
+            "return_type": "Test\\Test",
+            "parameters": [
+                {
+                    "position": "0",
+                    "type_hint": null,
+                    "name": "arg1",
+                    "by_ref": "0",
+                    "default_value": null
+                },
+                {
+                    "position": "1",
+                    "type_hint": null,
+                    "name": "arg2",
+                    "by_ref": "1",
+                    "default_value": null
+                }
+            ]
+        },
+        {
+            "id": "6f81fa973813a2372ebd84290c558b83d09eefdb",
+            "modifier": "4",
+            "name": "test3",
+            "return_type": "Test\\Foo",
+            "parameters": []
+        },
+        {
+            "id": "39d9f9ba79669982aa475e923361abe3db3c93f9",
+            "modifier": "4",
+            "name": "test4",
+            "return_type": "Test\\Bar",
+            "parameters": []
+        }
+    ]
+}
+    ]]></file>
+    <file class="Foo\Foo"><![CDATA[
+{
+    "class": "Foo\\Foo",
+    "extends": null,
+    "implements": [],
+    "properties": [],
+    "methods": []
+}
+    ]]></file>
+</files>

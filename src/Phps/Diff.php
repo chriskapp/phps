@@ -24,8 +24,8 @@ use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use PhpParser;
-use Phps\Diff\Repository;
 use Phps\Diff\RiskCalculator;
+use Phps\Diff\Result;
 
 /**
  * Diff
@@ -70,14 +70,14 @@ class Diff
         $offset = 0;
 
         while (true) {
-            $leftClasses = $this->left->getClasses($offset);
+            $leftClasses = $this->left->getClassesByOffset($offset);
 
             if (empty($leftClasses)) {
                 break;
             }
 
             foreach ($leftClasses as $leftClass) {
-                $rightClass = $this->right->findClass($leftClass['name']);
+                $rightClass = $this->right->getClassByName($leftClass['name']);
 
                 if (empty($rightClass)) {
                     $this->addLog(self::LEVEL_BC, 'Removed', $leftClass);
@@ -284,8 +284,8 @@ class Diff
 
     protected function compareParameters(array $leftMethod, array $rightMethod, array $leftClass)
     {
-        $leftParameters  = $this->left->getMethodParameters($leftMethod);
-        $rightParameters = $this->right->getMethodParameters($rightMethod);
+        $leftParameters  = $leftMethod['parameters'];
+        $rightParameters = $rightMethod['parameters'];
 
         $level = $this->isPrivate($leftMethod['modifier']) ? self::LEVEL_INFO : self::LEVEL_BC;
 
