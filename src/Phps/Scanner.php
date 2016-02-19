@@ -90,10 +90,8 @@ class Scanner
 
                     $this->traverser->traverse($this->parser->parse($source));
                 } catch (PhpParser\Error $e) {
-                    throw $e;
                     $this->logger->error('Parse error in ' . $path->getRealPath());
                 } catch (\Exception $e) {
-                    throw $e;
                     $this->logger->error($e->getMessage());
                 }
             }
