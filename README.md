@@ -4,10 +4,10 @@ PHPS
 ## About
 
 PHPS is a tool that generates an index of classes found in PHP source files.
-It searches in an folder for all class definitions and writes them into an 
+It searches in a folder for all class definitions and writes them into a 
 sqlite database. Even PHP is a dynamically typed language it tries to detect the
 return types and type-hints based on doc annotations. Then the tool can be used 
-to query the index. It should help to provide more insight of an code base. This 
+to query the index. It should help to provide more insight of a code base. This 
 can be used i.e. by IDEs to provide more intelligent code completion.
 
 PHPS uses the great nikic/php-parser to parse all definitions. While scanning it
@@ -22,13 +22,13 @@ To create an index goto the directory which you want index and type
 
     phps init
 
-PHPS will now recursively traverse all folders and parse every .php file. A new
-file phps.db will be created in the current working dir which contains the 
+PHPS will now recursively traverse all folders and parse every `*.php` file. A 
+new file phps.db will be created in the current working dir which contains the 
 sqlite database with all definitions. You can use the -v switch to see which
 files are scanned.
 
 You can now use the index. I.e. to get all available classes in the 
-Symfony\Component\Console\Command namesspace you can use the command:
+`Symfony\Component\Console\Command` namesspace you can use the command:
 
     phps search Symfony\Component\Console\Command
 
@@ -39,7 +39,7 @@ which gives you an output like:
      Symfony\Component\Console\Command\ListCommand
 
 To get all method definitions from the class 
-Symfony\Component\Console\Command\Command you can use the command:
+`Symfony\Component\Console\Command\Command` you can use the command:
 
     phps desc Symfony\Component\Console\Command\Command
 
@@ -93,11 +93,18 @@ which produces an output like:
      + asXml($asDom): string|DOMDocument
      - validateName($name)
 
-It is also possible to update the index for an specific file or folder. Therefor
+It is also possible to update the index for a specific file or folder. Therefor
 you can use the update command, which only updates the definitions for the given
 path
 
     phps update src/Foo
 
 With the -j switch it is possible to return json instead of plain text which is
-easier to parser for machines
+easier to parse for machines
+
+It is also possible to print all changes between two indexes:
+
+    phps diff phps_left.db phps_right.db
+
+This can be used to determine whether it is save to upgrade a specific code 
+base. We are hsoting a webservice at http://comparabl.com which does this.
