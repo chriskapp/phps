@@ -11,7 +11,7 @@
   ],
   "require": {
     "php": ">=5.3",
-    "nikic/php-parser": "^1.4",
+    "nikic/php-parser": "^2.0",
     "doctrine/dbal": "^2.5",
     "symfony/console": "^2.8",
     "monolog/monolog": "^1.17",
