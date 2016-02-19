@@ -1,18 +1,19 @@
 <?php
 /*
  * PHPS is a tool that generates an index of classes found in PHP source files
- * Copyright (C) 2015 Christoph Kappestein <k42b3.x@gmail.com>
- * 
+ *
+ * Copyright (C) 2015-2016 Christoph Kappestein <k42b3.x@gmail.com>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -32,111 +33,116 @@ use Symfony\Component\Console\Helper\Table;
  */
 class Text implements FormatterInterface
 {
-	public function formatSearchResult(array $result, OutputInterface $output)
-	{
-		$data = array();
-		foreach($result as $row)
-		{
-			$data[] = array($row['name']);
-		}
+    public function formatSearchResult(array $result, OutputInterface $output)
+    {
+        $data = array();
+        foreach ($result as $row) {
+            $data[] = array($row['name']);
+        }
 
-		$table = new Table($output);
-		$table
-			->setStyle('compact')
-			->setRows($data);
+        $table = new Table($output);
+        $table
+            ->setStyle('compact')
+            ->setRows($data);
 
-		$table->render();
-	}
+        $table->render();
+    }
 
-	public function formatDescribeResult(array $result, OutputInterface $output)
-	{
-		$data = array();
-		foreach($result['properties'] as $row)
-		{
-			$visibility = $this->getVisibility($row['modifier']);
+    public function formatDescribeResult(array $result, OutputInterface $output)
+    {
+        $data = array();
+        foreach ($result['properties'] as $row) {
+            $visibility = $this->getVisibility($row['modifier']);
 
-			$type = '';
-			if(!empty($row['type']))
-			{
-				$type = ': ' . $row['type'];
-			}
+            $type = '';
+            if (!empty($row['type'])) {
+                $type = ': ' . $row['type'];
+            }
 
-			$defaultValue = '';
-			if(!empty($row['default_value']))
-			{
-				$defaultValue.= ' = ' . $row['default_value'];
-			}
+            $defaultValue = '';
+            if (!empty($row['default_value'])) {
+                $defaultValue.= ' = ' . $row['default_value'];
+            }
 
-			$data[] = array($visibility . ' $' . $row['name'] . $type . $defaultValue);
-		}
+            $data[] = array($visibility . ' $' . $row['name'] . $type . $defaultValue);
+        }
 
-		foreach($result['methods'] as $row)
-		{
-			$visibility = $this->getVisibility($row['modifier']);
-			$parameters = $this->getParameters($row['parameters']);
+        foreach ($result['methods'] as $row) {
+            $visibility = $this->getVisibility($row['modifier']);
+            $parameters = $this->getParameters($row['parameters']);
 
-			$returnType = '';
-			if(!empty($row['return_type']))
-			{
-				$returnType = ': ' . $row['return_type'];
-			}
+            $returnType = '';
+            if (!empty($row['return_type'])) {
+                $returnType = ': ' . $row['return_type'];
+            }
 
-			$data[] = array($visibility . ' ' . $row['name'] . $parameters . $returnType);
-		}
+            $data[] = array($visibility . ' ' . $row['name'] . $parameters . $returnType);
+        }
 
-		$table = new Table($output);
-		$table
-			->setStyle('compact')
-			->setRows($data);
+        $table = new Table($output);
+        $table
+            ->setStyle('compact')
+            ->setRows($data);
 
-		$table->render();
-	}
+        $table->render();
+    }
 
-	protected function getParameters(array $parameters)
-	{
-		$result = '(';
+    public function formatDiffResult(array $result, OutputInterface $output)
+    {
+        $data = [
+            ['BC count', $result['bc_count']],
+            ['Changed count', $result['changed_count']],
+            ['Left count', $result['left_count']],
+            ['Right count', $result['right_count']],
+            ['Upgrade risk', $result['upgrade_risk']],
+        ];
 
-		foreach($parameters as $parameter)
-		{
-			if(!empty($parameter['type_hint']))
-			{
-				$result.= $parameter['type_hint'] . ' ';
-			}
+        $table = new Table($output);
+        $table
+            ->setStyle('compact')
+            ->setRows($data);
 
-			$result.= $parameter['by_ref'] ? '&' : '';
-			$result.= '$' . $parameter['name'];
+        $table->render();
+    }
 
-			if(!empty($parameter['default_value']))
-			{
-				$result.= ' = ' . $parameter['default_value'];
-			}
+    protected function getParameters(array $parameters)
+    {
+        $result = '(';
 
-			$result.= ', ';
-		}
+        foreach ($parameters as $parameter) {
+            if (!empty($parameter['type_hint'])) {
+                $result.= $parameter['type_hint'] . ' ';
+            }
 
-		if(count($parameters) > 0)
-		{
-			$result = substr($result, 0, -2);
-		}
+            $result.= $parameter['by_ref'] ? '&' : '';
+            $result.= '$' . $parameter['name'];
 
-		$result.= ')';
+            if (!empty($parameter['default_value'])) {
+                $result.= ' = ' . $parameter['default_value'];
+            }
 
-		return $result;
-	}
+            $result.= ', ';
+        }
 
-	protected function getVisibility($modifier)
-	{
-		if($modifier & 1)
-		{
-			return '+';
-		}
-		else if($modifier & 2)
-		{
-			return '#';
-		}
-		else if($modifier & 4)
-		{
-			return '-';
-		}
-	}
+        if (count($parameters) > 0) {
+            $result = substr($result, 0, -2);
+        }
+
+        $result.= ')';
+
+        return $result;
+    }
+
+    protected function getVisibility($modifier)
+    {
+        if ($modifier & 1) {
+            return '+';
+        } elseif ($modifier & 2) {
+            return '#';
+        } elseif ($modifier & 4) {
+            return '-';
+        } else {
+            return '+';
+        }
+    }
 }

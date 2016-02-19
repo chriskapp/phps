@@ -20,14 +20,37 @@
 
 namespace Phps;
 
+use Doctrine\DBAL\Configuration;
+use Doctrine\DBAL\DriverManager;
+
 /**
- * Phps
+ * ConnectionManager
  *
  * @author  Christoph Kappestein <k42b3.x@gmail.com>
  * @license https://www.gnu.org/licenses/gpl-3.0.html
  * @link    https://github.com/k42b3/phps
  */
-class Phps
+class ConnectionManager
 {
-    const VERSION = '0.2';
+    public function getInMemoryConnection()
+    {
+        $config = new Configuration();
+        $params = array(
+            'memory' => true,
+            'driver' => 'pdo_sqlite',
+        );
+
+        return DriverManager::getConnection($params, $config);
+    }
+
+    public function getFileConnection($basePath)
+    {
+        $config = new Configuration();
+        $params = array(
+            'path'   => $basePath . DIRECTORY_SEPARATOR . 'phps.db',
+            'driver' => 'pdo_sqlite',
+        );
+
+        return DriverManager::getConnection($params, $config);
+    }
 }

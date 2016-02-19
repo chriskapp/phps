@@ -1,18 +1,19 @@
 <?php
 /*
  * PHPS is a tool that generates an index of classes found in PHP source files
- * Copyright (C) 2015 Christoph Kappestein <k42b3.x@gmail.com>
- * 
+ *
+ * Copyright (C) 2015-2016 Christoph Kappestein <k42b3.x@gmail.com>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -33,41 +34,39 @@ use Symfony\Component\Console\Helper\Table;
  */
 class UpdateCommand extends CommandAbstract
 {
-	protected function configure()
-	{
-		$this
-			->setName('update')
-			->setDescription('Updates the index for the given path. In case you want to create the complete index use the init command')
-			->addArgument('path', InputArgument::REQUIRED, 'Path or file which should be updated')
-		;
-	}
+    protected function configure()
+    {
+        $this
+            ->setName('update')
+            ->setDescription('Updates the index for the given path. In case you want to create the complete index use the init command')
+            ->addArgument('path', InputArgument::REQUIRED, 'Path or file which should be updated')
+        ;
+    }
 
-	protected function execute(InputInterface $input, OutputInterface $output)
-	{
-		$path     = $input->getArgument('path') ?: '.';
-		$realPath = realpath($path);
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $path     = $input->getArgument('path') ?: '.';
+        $realPath = realpath($path);
 
-		if(!$realPath)
-		{
-			$output->writeln('Invalid folder ' . $path);
+        if (!$realPath) {
+            $output->writeln('Invalid folder ' . $path);
 
-			return 1;
-		}
+            return 1;
+        }
 
-		$container = $this->getContainer($output);
+        $container = $this->getContainer($output);
 
-		$container['schema_manager']->createSchema($container['connection']);
-		$container['schema_manager']->createSchema($container['memory_connection']);
+        $container['schema_manager']->createSchema($container['connection']);
+        $container['schema_manager']->createSchema($container['memory_connection']);
 
-		$container['cleaner']->deleteByPath($container['connection'], $realPath);
+        $container['cleaner']->deleteByPath($container['connection'], $realPath);
 
-		$container['scanner']->scan($realPath);
+        $container['scanner']->scan($realPath);
 
-		$container['copier']->copy($container['memory_connection'], $container['connection']);
+        $container['copier']->copy($container['memory_connection'], $container['connection']);
 
-		$output->writeln('Update successful');
+        $output->writeln('Update successful');
 
-		return 0;
-	}
+        return 0;
+    }
 }
-

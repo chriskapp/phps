@@ -20,27 +20,28 @@
 
 namespace Phps\Command;
 
+use Phps\Diff;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\Table;
 
 /**
- * SearchCommand
+ * DiffCommand
  *
  * @author  Christoph Kappestein <k42b3.x@gmail.com>
  * @license https://www.gnu.org/licenses/gpl-3.0.html
  * @link    https://github.com/k42b3/phps
  */
-class SearchCommand extends CommandAbstract
+class DiffCommand extends CommandAbstract
 {
     protected function configure()
     {
         $this
-            ->setName('search')
-            ->setDescription('Searches the index for an given namespace')
-            ->addArgument('query', InputArgument::OPTIONAL, 'Keyword which must be in the absolute class name')
+            ->setName('diff')
+            ->setDescription('Compares the difference of two generated class definitions')
+            ->addArgument('left', InputArgument::REQUIRED, 'The left sqlite db')
+            ->addArgument('right', InputArgument::REQUIRED, 'The right sqlite db')
             ->addOption('json', 'j', InputOption::VALUE_NONE, 'Whether to return json')
         ;
     }
@@ -48,8 +49,8 @@ class SearchCommand extends CommandAbstract
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $container = $this->getContainer($output);
-        $result    = $container['repository']->getClasses($input->getArgument('query'));
+        $result    = Diff::fromFiles($input->getArgument('left'), $input->getArgument('right'))->diff();
         $formatter = $container['formatter_factory']->getFormatter($input->getOption('json') ? 'json' : null);
-        $formatter->formatSearchResult($result, $output);
+        $formatter->formatDiffResult($result, $output);
     }
 }

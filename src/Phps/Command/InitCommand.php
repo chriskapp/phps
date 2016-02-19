@@ -1,18 +1,19 @@
 <?php
 /*
  * PHPS is a tool that generates an index of classes found in PHP source files
- * Copyright (C) 2015 Christoph Kappestein <k42b3.x@gmail.com>
- * 
+ *
+ * Copyright (C) 2015-2016 Christoph Kappestein <k42b3.x@gmail.com>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -32,41 +33,39 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class InitCommand extends CommandAbstract
 {
-	protected function configure()
-	{
-		$this
-			->setName('init')
-			->setDescription('Initializes the database and searches recursively for all PHP classes')
-			->addArgument('path', InputArgument::OPTIONAL, 'Base path which should be scanned default is the current working dir')
-		;
-	}
+    protected function configure()
+    {
+        $this
+            ->setName('init')
+            ->setDescription('Initializes the database and searches recursively for all PHP classes')
+            ->addArgument('path', InputArgument::OPTIONAL, 'Base path which should be scanned default is the current working dir')
+        ;
+    }
 
-	protected function execute(InputInterface $input, OutputInterface $output)
-	{
-		$path     = $input->getArgument('path') ?: '.';
-		$realPath = realpath($path);
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $path     = $input->getArgument('path') ?: '.';
+        $realPath = realpath($path);
 
-		if(!$realPath)
-		{
-			$output->writeln('Invalid folder ' . $path);
+        if (!$realPath) {
+            $output->writeln('Invalid folder ' . $path);
 
-			return 1;
-		}
+            return 1;
+        }
 
-		$container = $this->getContainer($output);
+        $container = $this->getContainer($output);
 
-		$container['schema_manager']->createSchema($container['connection']);
-		$container['schema_manager']->createSchema($container['memory_connection']);
+        $container['schema_manager']->createSchema($container['connection']);
+        $container['schema_manager']->createSchema($container['memory_connection']);
 
-		$container['cleaner']->deleteAll($container['connection']);
+        $container['cleaner']->deleteAll($container['connection']);
 
-		$container['scanner']->scan($realPath);
+        $container['scanner']->scan($realPath);
 
-		$container['copier']->copy($container['memory_connection'], $container['connection']);
+        $container['copier']->copy($container['memory_connection'], $container['connection']);
 
-		$output->writeln('Initialization finished');
+        $output->writeln('Initialization finished');
 
-		return 0;
-	}
+        return 0;
+    }
 }
-
