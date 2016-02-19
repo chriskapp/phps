@@ -101,7 +101,7 @@ class Repository
         $sql = 'SELECT COUNT(id)
                   FROM phps_class';
 
-        return $this->connection->fetchColumn($sql);
+        return (int) $this->connection->fetchColumn($sql);
     }
 
     public function getImplements(array $class)

@@ -150,7 +150,8 @@ class Diff
                 if ($this->isPrivate($leftProperty['modifier'])) {
                     $this->addLog(self::LEVEL_INFO, 'Removed private property ' . $leftProperty['name'], $leftClass);
                 } else {
-                    $this->addLog(self::LEVEL_BC, 'Removed property ' . $leftProperty['name'], $leftClass);
+                    $visibility = $this->getVisibility($leftProperty['modifier']);
+                    $this->addLog(self::LEVEL_BC, 'Removed ' . $visibility . ' property ' . $leftProperty['name'], $leftClass);
                 }
                 continue;
             }
@@ -177,14 +178,15 @@ class Diff
             $rightStatic = $this->isStatic($rightProperty['modifier']);
 
             if ($leftStatic != $rightStatic) {
+                $visibility = $this->getVisibility($leftProperty['modifier']);
                 if ($leftStatic) {
                     if ($this->isPrivate($leftProperty['modifier'])) {
                         $this->addLog(self::LEVEL_INFO, 'Changed private property ' . $leftProperty['name'] . ' to non-static', $leftClass);
                     } else {
-                        $this->addLog(self::LEVEL_BC, 'Changed property ' . $leftProperty['name'] . ' to non-static', $leftClass);
+                        $this->addLog(self::LEVEL_BC, 'Changed ' . $visibility . ' property ' . $leftProperty['name'] . ' to non-static', $leftClass);
                     }
                 } else {
-                    $this->addLog(self::LEVEL_INFO, 'Changed property ' . $leftProperty['name'] . ' to static', $leftClass);
+                    $this->addLog(self::LEVEL_INFO, 'Changed ' . $visibility . ' property ' . $leftProperty['name'] . ' to static', $leftClass);
                 }
             }
         }
@@ -209,7 +211,8 @@ class Diff
                 if ($this->isPrivate($leftMethod['modifier'])) {
                     $this->addLog(self::LEVEL_INFO, 'Removed private method ' . $leftMethod['name'], $leftClass);
                 } else {
-                    $this->addLog(self::LEVEL_BC, 'Removed method ' . $leftMethod['name'], $leftClass);
+                    $visibility = $this->getVisibility($leftMethod['modifier']);
+                    $this->addLog(self::LEVEL_BC, 'Removed ' . $visibility . ' method ' . $leftMethod['name'], $leftClass);
                 }
                 continue;
             }
@@ -219,13 +222,14 @@ class Diff
             $rightVisibility = $this->getVisibility($rightMethod['modifier']);
 
             if ($leftVisibility != $rightVisibility) {
-                // if the left visibility was private you can do whatever you
-                // like since no code depends on the property else it is a BC
                 if ($this->isPrivate($leftMethod['modifier'])) {
+                    // if the left visibility was private you can do whatever 
+                    // you like since no code depends on the property else it is 
+                    // a BC
                     $this->addLog(self::LEVEL_INFO, 'Changed visibility of method ' . $leftMethod['name'] . ' from ' . $leftVisibility . ' to ' . $rightVisibility, $leftClass);
-                }
-                // if the right visibility gets public there is also no problem
-                elseif ($this->isPublic($rightMethod['modifier'])) {
+                } elseif ($this->isPublic($rightMethod['modifier'])) {
+                    // if the right visibility gets public there is also no 
+                    // problem
                     $this->addLog(self::LEVEL_INFO, 'Changed visibility of method ' . $leftMethod['name'] . ' from ' . $leftVisibility . ' to ' . $rightVisibility, $leftClass);
                 } else {
                     $this->addLog(self::LEVEL_BC, 'Changed visibility of method ' . $leftMethod['name'] . ' from ' . $leftVisibility . ' to ' . $rightVisibility, $leftClass);
@@ -236,14 +240,15 @@ class Diff
             $rightStatic = $this->isStatic($rightMethod['modifier']);
 
             if ($leftStatic != $rightStatic) {
+                $visibility = $this->getVisibility($leftMethod['modifier']);
                 if ($leftStatic) {
                     if ($this->isPrivate($leftMethod['modifier'])) {
                         $this->addLog(self::LEVEL_INFO, 'Changed private method ' . $leftMethod['name'] . ' to non-static', $leftClass);
                     } else {
-                        $this->addLog(self::LEVEL_BC, 'Changed method ' . $leftMethod['name'] . ' to non-static', $leftClass);
+                        $this->addLog(self::LEVEL_BC, 'Changed ' . $visibility . ' method ' . $leftMethod['name'] . ' to non-static', $leftClass);
                     }
                 } else {
-                    $this->addLog(self::LEVEL_INFO, 'Changed method ' . $leftMethod['name'] . ' to static', $leftClass);
+                    $this->addLog(self::LEVEL_INFO, 'Changed ' . $visibility . ' method ' . $leftMethod['name'] . ' to static', $leftClass);
                 }
             }
 
@@ -251,14 +256,15 @@ class Diff
             $rightAbstract = $this->isAbstract($rightMethod['modifier']);
 
             if ($leftAbstract != $rightAbstract) {
+                $visibility = $this->getVisibility($leftMethod['modifier']);
                 if ($leftAbstract) {
-                    if ($this->isPrivate($leftMethod['modifier'])) {
-                        $this->addLog(self::LEVEL_INFO, 'Changed private method ' . $leftMethod['name'] . ' to non-abstract', $leftClass);
-                    } else {
-                        $this->addLog(self::LEVEL_BC, 'Changed method ' . $leftMethod['name'] . ' to non-abstract', $leftClass);
-                    }
+                    $this->addLog(self::LEVEL_INFO, 'Changed ' . $visibility . ' method ' . $leftMethod['name'] . ' to non-abstract', $leftClass);
                 } else {
-                    $this->addLog(self::LEVEL_INFO, 'Changed method ' . $leftMethod['name'] . ' to abstract', $leftClass);
+                    if ($this->isPrivate($leftMethod['modifier'])) {
+                        $this->addLog(self::LEVEL_INFO, 'Changed private method ' . $leftMethod['name'] . ' to abstract', $leftClass);
+                    } else {
+                        $this->addLog(self::LEVEL_BC, 'Changed ' . $visibility . ' method ' . $leftMethod['name'] . ' to abstract', $leftClass);
+                    }
                 }
             }
 
@@ -266,14 +272,15 @@ class Diff
             $rightFinal = $this->isFinal($rightMethod['modifier']);
 
             if ($leftFinal != $rightFinal) {
+                $visibility = $this->getVisibility($leftMethod['modifier']);
                 if ($leftFinal) {
-                    if ($this->isPrivate($leftMethod['modifier'])) {
-                        $this->addLog(self::LEVEL_INFO, 'Changed private method ' . $leftMethod['name'] . ' to non-final', $leftClass);
-                    } else {
-                        $this->addLog(self::LEVEL_BC, 'Changed method ' . $leftMethod['name'] . ' to non-final', $leftClass);
-                    }
+                    $this->addLog(self::LEVEL_INFO, 'Changed ' . $visibility . ' method ' . $leftMethod['name'] . ' to non-final', $leftClass);
                 } else {
-                    $this->addLog(self::LEVEL_INFO, 'Changed method ' . $leftMethod['name'] . ' to final', $leftClass);
+                    if ($this->isPrivate($leftMethod['modifier'])) {
+                        $this->addLog(self::LEVEL_INFO, 'Changed private method ' . $leftMethod['name'] . ' to final', $leftClass);
+                    } else {
+                        $this->addLog(self::LEVEL_BC, 'Changed ' . $visibility . ' method ' . $leftMethod['name'] . ' to final', $leftClass);
+                    }
                 }
             }
 

@@ -48,7 +48,7 @@ class ScannerTest extends \PHPUnit_Framework_TestCase
             $class  = $node->attributes()['class'];
             $expect = trim((string) $node);
 
-            $result = $repository->getDescription($class, '');
+            $result = $repository->getDescription($class, null);
             $stream = fopen('php://memory', 'r+');
             $output = new StreamOutput($stream);
 

@@ -9,12 +9,43 @@
         "Bar\\Foo",
         "Foo\\Foo\\Bar\\Foo"
     ],
-    "properties": [],
+    "properties": [
+        {
+            "modifier": "1",
+            "name": "prop1",
+            "type": "string",
+            "default_value": null
+        },
+        {
+            "modifier": "2",
+            "name": "prop2",
+            "type": "Test\\Test",
+            "default_value": null
+        },
+        {
+            "modifier": "4",
+            "name": "prop3",
+            "type": "Test\\Foo",
+            "default_value": null
+        },
+        {
+            "modifier": "4",
+            "name": "prop4",
+            "type": "Test\\Bar",
+            "default_value": null
+        },
+        {
+            "modifier": "9",
+            "name": "prop5",
+            "type": "int",
+            "default_value": null
+        }
+    ],
     "methods": [
         {
-            "id": "aa6becede3963bd1e5145d5303719c1f68705ff6",
+            "id": "c9698792ef7af9147f648c509854c5443b9d794c",
             "modifier": "1",
-            "name": "test1",
+            "name": "method1",
             "return_type": "int",
             "parameters": [
                 {
@@ -41,9 +72,9 @@
             ]
         },
         {
-            "id": "f314827b4168309d296aa96e479ccea954df80bd",
+            "id": "43c7eb784e721cfb7c7bbb400c47f018525b0f71",
             "modifier": "2",
-            "name": "test2",
+            "name": "method2",
             "return_type": "Test\\Test",
             "parameters": [
                 {
@@ -63,16 +94,16 @@
             ]
         },
         {
-            "id": "6f81fa973813a2372ebd84290c558b83d09eefdb",
+            "id": "a96dcc3ca27cbea9c86ee2826a3a423c273a54eb",
             "modifier": "4",
-            "name": "test3",
+            "name": "method3",
             "return_type": "Test\\Foo",
             "parameters": []
         },
         {
-            "id": "39d9f9ba79669982aa475e923361abe3db3c93f9",
+            "id": "0106dc46f74155937b939053d57e10e6f3025f54",
             "modifier": "4",
-            "name": "test4",
+            "name": "method4",
             "return_type": "Test\\Bar",
             "parameters": []
         }
