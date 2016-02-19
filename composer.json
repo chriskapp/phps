@@ -11,11 +11,11 @@
   ],
   "require": {
     "php": ">=5.3",
-    "nikic/php-parser": "1.2.1",
-    "doctrine/dbal": "~2.5",
-    "symfony/console": "2.6.5",
-    "monolog/monolog": "1.13.1",
-    "pimple/pimple": "~3.0"
+    "nikic/php-parser": "^1.4",
+    "doctrine/dbal": "^2.5",
+    "symfony/console": "^2.8",
+    "monolog/monolog": "^1.17",
+    "pimple/pimple": "^3.0"
   },
   "bin": ["bin/phps"],
   "autoload": {
