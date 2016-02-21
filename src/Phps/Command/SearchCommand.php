@@ -42,12 +42,13 @@ class SearchCommand extends CommandAbstract
             ->setDescription('Searches the index for an given namespace')
             ->addArgument('query', InputArgument::OPTIONAL, 'Keyword which must be in the absolute class name')
             ->addOption('json', 'j', InputOption::VALUE_NONE, 'Whether to return json')
+            ->addOption('db', 'd', InputOption::VALUE_OPTIONAL, 'Path of the database file')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $container = $this->getContainer($output);
+        $container = $this->getContainer($output, $input->getOption('db'));
         $result    = $container['repository']->getClasses($input->getArgument('query'));
         $formatter = $container['formatter_factory']->getFormatter($input->getOption('json') ? 'json' : null);
         $formatter->formatSearchResult($result, $output);

@@ -21,6 +21,7 @@
 namespace Phps\Command;
 
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\Table;
@@ -40,6 +41,7 @@ class UpdateCommand extends CommandAbstract
             ->setName('update')
             ->setDescription('Updates the index for the given path. In case you want to create the complete index use the init command')
             ->addArgument('path', InputArgument::REQUIRED, 'Path or file which should be updated')
+            ->addOption('db', 'd', InputOption::VALUE_OPTIONAL, 'Path of the database file')
         ;
     }
 
@@ -54,7 +56,7 @@ class UpdateCommand extends CommandAbstract
             return 1;
         }
 
-        $container = $this->getContainer($output);
+        $container = $this->getContainer($output, $input->getOption('db'));
 
         $container['schema_manager']->createSchema($container['connection']);
         $container['schema_manager']->createSchema($container['memory_connection']);

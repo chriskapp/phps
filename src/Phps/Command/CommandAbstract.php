@@ -36,12 +36,16 @@ class CommandAbstract extends Command
 {
     private $container;
 
-    public function getContainer(OutputInterface $output)
+    public function getContainer(OutputInterface $output, $dbFile)
     {
         if ($this->container) {
             return $this->container;
         }
 
-        return $this->container = ContainerFactory::getContainer($output);
+        if (empty($dbFile)) {
+            $dbFile = ContainerFactory::getDefaultDbFilePath();
+        }
+
+        return $this->container = ContainerFactory::getContainer($output, $dbFile);
     }
 }

@@ -42,12 +42,13 @@ class DescCommand extends CommandAbstract
             ->addArgument('class', InputArgument::REQUIRED, 'The absolute class name')
             ->addArgument('query', InputArgument::OPTIONAL, 'Keyword which must be in the method name')
             ->addOption('json', 'j', InputOption::VALUE_NONE, 'Whether to return json')
+            ->addOption('db', 'd', InputOption::VALUE_OPTIONAL, 'Path of the database file')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $container = $this->getContainer($output);
+        $container = $this->getContainer($output, $input->getOption('db'));
         $result    = $container['repository']->getDescription($input->getArgument('class'), $input->getArgument('query'));
         $formatter = $container['formatter_factory']->getFormatter($input->getOption('json') ? 'json' : null);
         $formatter->formatDescribeResult($result, $output);

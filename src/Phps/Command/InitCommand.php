@@ -21,6 +21,7 @@
 namespace Phps\Command;
 
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -39,6 +40,7 @@ class InitCommand extends CommandAbstract
             ->setName('init')
             ->setDescription('Initializes the database and searches recursively for all PHP classes')
             ->addArgument('path', InputArgument::OPTIONAL, 'Base path which should be scanned default is the current working dir')
+            ->addOption('db', 'd', InputOption::VALUE_OPTIONAL, 'Path of the database file')
         ;
     }
 
@@ -53,7 +55,7 @@ class InitCommand extends CommandAbstract
             return 1;
         }
 
-        $container = $this->getContainer($output);
+        $container = $this->getContainer($output, $input->getOption('db'));
 
         $container['schema_manager']->createSchema($container['connection']);
         $container['schema_manager']->createSchema($container['memory_connection']);

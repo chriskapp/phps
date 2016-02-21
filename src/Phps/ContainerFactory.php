@@ -36,10 +36,11 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ContainerFactory
 {
-    public static function getContainer(OutputInterface $output)
+    public static function getContainer(OutputInterface $output, $dbFile)
     {
         $container = new Container();
         $container['output'] = $output;
+        $container['db_file'] = $dbFile;
 
         $container['logger'] = function ($c) {
             $logger = new Logger('phps');
@@ -61,7 +62,7 @@ class ContainerFactory
         $container['connection'] = function ($c) {
             $config = new Configuration();
             $params = array(
-                'path'   => getcwd() . DIRECTORY_SEPARATOR . 'phps.db',
+                'path'   => $c['db_file'],
                 'driver' => 'pdo_sqlite',
             );
 
@@ -93,5 +94,10 @@ class ContainerFactory
         };
 
         return $container;
+    }
+
+    public function getDefaultDbFilePath()
+    {
+        return getcwd() . DIRECTORY_SEPARATOR . 'phps.db';
     }
 }
