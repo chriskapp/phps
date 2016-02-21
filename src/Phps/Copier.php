@@ -95,29 +95,28 @@ class Copier
     protected function copyTable(Connection $srcConnection, Connection $destConnection, $tableName, array $columns)
     {
         $result = $srcConnection->fetchAll('SELECT ' . implode(', ', $columns) . ' FROM ' . $tableName);
-        $sql    = '';
-        
+        $head   =  'INSERT INTO ' . $tableName . ' (' . implode(',', $columns) . ') VALUES ';
+        $buffer = [];
+
         foreach ($result as $i => $row) {
             if ($i % self::ROW_BUFFER == 0 && $i > 0) {
-                $destConnection->query(substr($sql, 0, -1));
+                $destConnection->query($head . ' ' . implode(',', $buffer));
             }
 
             if ($i % self::ROW_BUFFER == 0) {
-                $sql = 'INSERT INTO ' . $tableName . ' (' . implode(', ', $columns) . ') VALUES ';
+                $buffer = [];
             }
 
-            $sql.= '(';
+            $values = [];
             foreach ($columns as $column) {
-                $sql.= $destConnection->quote($row[$column]);
-                $sql.= ',';
+                $values[] = $destConnection->quote($row[$column]);
             }
-            $sql = substr($sql, 0, -1);
-            $sql.= '),';
+
+            $buffer[] = '(' . implode(',', $values) . ')';
         }
 
-        $sql = substr($sql, 0, -1);
-        if (!empty($sql)) {
-            $destConnection->query($sql);
+        if (!empty($buffer)) {
+            $destConnection->query($head . ' ' . implode(',', $buffer));
         }
 
         $srcConnection->query('DELETE FROM ' . $tableName);
