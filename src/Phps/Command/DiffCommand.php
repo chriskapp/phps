@@ -48,7 +48,7 @@ class DiffCommand extends CommandAbstract
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $container = $this->getContainer($output);
+        $container = $this->getContainer($output, null);
         $result    = Diff::fromFiles($input->getArgument('left'), $input->getArgument('right'))->diff();
         $formatter = $container['formatter_factory']->getFormatter($input->getOption('json') ? 'json' : null);
         $formatter->formatDiffResult($result, $output);
