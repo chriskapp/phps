@@ -46,6 +46,8 @@ class InitCommand extends CommandAbstract
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        ini_set('xdebug.max_nesting_level', 3000);
+
         $path     = $input->getArgument('path') ?: '.';
         $realPath = realpath($path);
 
